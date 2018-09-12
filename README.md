@@ -1,6 +1,6 @@
 # Tyler's MyReads Project
 
-This is Tyler's version of the final assessment project for Udacity's React Fundamentals course. (But hes doing the Front-End Nanodegree so he's got some more work ahead of him.) This template saved Tyler time by providing a static example of the CSS and HTML markup that may be used, but without any of the React code that is needed to complete the project. Tyler chose to start with the template forked from the Udacity repository, and add interactivity to the app by refactoring the static code in this repository.
+The MyReads project creates a bookshelf app that allows you to select and categorize books you have read, are currently reading, or want to read. This template saved Tyler time by providing a static example of the CSS and HTML markup that may be used, but without any of the React code that is needed to complete the project. Tyler chose to start with the template forked from the Udacity repository, and add interactivity to the app by refactoring the static code in this repository.
 
 [Create React App](https://github.com/facebookincubator/create-react-app) was used to bootstrap the project.
 
