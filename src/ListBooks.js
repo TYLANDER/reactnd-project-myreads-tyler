@@ -1,90 +1,60 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
-import escapeRegExp from 'escape-string-regexp'
+import { Link } from 'react-router-dom';
 import './App.css'
+import BookShelf from './Bookshelf'
+import * as BooksAPI from './BooksAPI'
 
-const shelves = [
-  {
-    key: 'currentlyReading',
-    name: 'Currently Reading'
-  },
-  {
-    key: 'wantToRead',
-    name: 'Want To Read'
-  },
-  {
-    key: 'read',
-    name: 'Read'
-  }
-];
 
 class ListBooks extends Component {
+  state = {};
 
-    static propTypes = {
-       books: PropTypes.array.isRequired
-    }
+  handleChangeShelf = (bookId: string, e: any) => {
+    let temp = this.props.booksOnShelf;
+    const book = temp.filter(t => t.id === bookId)[0];
+    book.shelf = e.target.value;
+    BooksAPI.update(book, e.target.value).then(response => {
+      this.setState({
+        books: temp
+      });
+    });
+  };
 
-    state = {
-        showSearchPage: false,
-        query: ''
-      }
+  render() {
+    return (
+      <div className="list-books">
+        <div className="list-books-title">
+          <h1>MyReads</h1>
+        </div>
+        <div className="list-books-content">
+          <BookShelf
+            key="currently"
+            books={this.props.booksOnShelf.filter(book => book.shelf === "currentlyReading")}
+            onChangeShelf={this.handleChangeShelf}
+            shelftitle="Currently Reading"
+          />
+          <BookShelf
+            key="wantToRead"
+            books={this.props.booksOnShelf.filter(book => book.shelf === "wantToRead")}
+            onChangeShelf={this.handleChangeShelf}
+            shelftitle="Want to Read"
+          />
+          <BookShelf
+            key="read"
+            books={this.props.booksOnShelf.filter(book => book.shelf === "read")}
+            onChangeShelf={this.handleChangeShelf}
+            shelftitle="Read"
+          />
+        </div>
+        <div className="open-search">
+          <Link to="/search">Add a book</Link>
+        </div>
+      </div>
+    );
+  }
+}
 
-    render() {
+export default ListBooks;
 
-        const { books, onUpdateShelf } = this.props
-
-        function getBooksForShelf(shelfKey) {
-          return books.filter(book => book.shelf === shelfKey);
-        }
-
-        console.log(books);
-
-        return(
-              <div className="list-books">
-                <div className="list-books-title">
-                  <h1>My Reads</h1>
-                </div>
-                <div className="list-books-content">
-                  <div>
-                    { shelves.map((shelf) => (
-                      <div key={shelf.key} className="bookshelf">
-                        <h2 className="bookshelf-title">{shelf.name}</h2>
-                          <div className="bookshelf-books">
-                            <ol className="books-grid">
-                        <li>
-                          { getBooksForShelf(shelf.key).map((book) => (
-                            <div key={book.id} className="book">
-                              <div className="book-top">
-                               <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
-                                <div className="book-shelf-changer">
-                                 <select onChange={this.handleChange} defaultValue={book.shelf || 'none'}>
-                                  <option value="none" disabled>Move to...</option>
-                                    <option value="currentlyReading" onClick={() => onUpdateShelf(book, 'currentlyReading')} >Currently Reading</option>
-                                    <option value="wantToRead" onClick={() => onUpdateShelf(book, 'wantToRead')} >Want to Read</option>
-                                    <option value="read" onClick={() => onUpdateShelf(book, 'read')} >Read</option>
-                                    <option value="none" onClick={() => onUpdateShelf(book, '')} >None</option>
-                                   </select>
-                                </div>
-                              </div>
-                              <div className="book-title">{book.title}</div>
-                             <div className="book-authors">{book.author}</div>
-                            </div>
-                            ))}
-                          </li>
-                        </ol>
-                        </div>
-                      </div>
-                    )) }
-                  </div>
-                </div>
-                <div className="open-search">
-                  <a onClick={() => this.setState({ showSearchPage: true })}>Add a book</a>
-                </div>
-              </div>
-            )}}
-
-export default ListBooks
 
 
 
