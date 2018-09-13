@@ -1,6 +1,6 @@
 import React from 'react'
 import * as BooksAPI from './BooksAPI'
-import {Route, BrowserRouter, Link} from 'react-router-dom'
+import {Route, Link} from 'react-router-dom'
 import './App.css'
 import Book from './book.js'
 import SearchPage from './SearchPage.js'
@@ -16,7 +16,7 @@ class BooksApp extends React.Component {
      * pages, as well as provide a good URL they can bookmark and share.
      */
 
-    showSearchPage: false,
+    screen: 'search',
     books: []
   }
 
@@ -41,12 +41,12 @@ class BooksApp extends React.Component {
   }
 
   render() {
-    return (<BrowserRouter>
-      <div className="app">
-        <Route exact="exact" path="/" render={() => (<ListBooks onMoveBook={this.handleChangeShelf} books={this.state.books}/>)}/>
-        <Route path="/search" component={SearchPage}/>
-      </div>
-    </BrowserRouter>)
+    return (<div className="app">
+      /* eslint-disable */
+      <Route exact="exact" path="/" render={() => (<ListBooks onMoveBook={this.handleChangeShelf} books={this.state.books}/>)}/>
+      <Route path="/search" component={SearchPage}/>
+      /* eslint-enable */
+    </div>)
   }
 }
 
