@@ -8,10 +8,10 @@ state ={};
 
 render() {
     return (
-      <div className="bookshelf">
-        <h2 className="bookshelf-title">
+      <div className="bookshelf flex">
+        <h4 className="bookshelf-title text-grey-dark font-normal">
           {this.props.shelftitle}
-        </h2>
+        </h4>
         <div className="bookshelf-books">
           <ol className="books-grid">
             {this.props.books.map(book =>
@@ -26,7 +26,7 @@ render() {
                     }}
                   />
                   <div className="book-shelf-changer">
-                    <select value={book.shelf} onChange={e => this.props.onChangeShelf(book.id, e)}>
+                    <select className="block appearance-none w-full text-sm bg-white border border-grey-light hover:border-grey pl-3 py-1 pr-8 rounded shadow leading-normal focus:outline-none focus:shadow-outline" value={book.shelf} onChange={e => this.props.onChangeShelf(book.id, e)}>
                       <option value="none" disabled>
                         Move to...
                       </option>
