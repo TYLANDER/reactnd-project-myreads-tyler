@@ -1,91 +1,142 @@
-import React, { Component } from 'react'
-import * as BooksAPI from "./BooksAPI"
-import { Link } from "react-router-dom"
-import "./App.css"
-import './index.css'
+// @flow
+import React from "react";
+import { Link } from "react-router-dom";
+import Rx from 'rxjs/Rx';
 
+import * as BooksAPI from "./BooksAPI";
+import "./App.css";
 
-
-class SearchPage extends Component {
-
+class SearchPage extends React.Component {
   state = {
-    query: '',
-    showingBooks: []
+    query: "",
+    books: []
+  };
+
+  searchInput: Rx.Subject<any>;
+
+
+  constructor() {
+    super();
+    this.props.searchInput = new Rx.Subject();
+    this.searchInput.debounceTime(500).subscribe(param => {
+      this.fireSearchBook(param);
+    });
   }
 
-  updateQuery = (query) => {
-  		this.setState({ query })
-  		if(query) {
-  			BooksAPI.search(query).then(books => {
-  				if (books.length >= 1) {
-  					this.setState({ showingBooks: books })
-  				} else {
-  					this.setState({ showingBooks: [] })
-  				}
-  			})
-  		}
-  		if (query === '') {
-  			this.setState(state =>
-  				({ query: '', showingBooks: [] })
-  			)
-  		}
-  	}
+  updateQuery = (query: string) => {
+    this.setState({
+      query: query
+    });
+    if (query) {
+      this.searchInput.next(query);
+    } else {
+      this.setState({
+        books: []
+      });
+    }
+  };
 
-  	handleChange = (e) => {
-  		e.preventDefault()
-  		let value = e.target.value
-  		let bookID = e.target.closest('li').classList[0]
-  		this.props.addToShelf(value, bookID)
-  	}
-
-    render(){
-  		return(
-  			<div className="search-books">
-  				<div className="search-books-bar">
-  					<Link className="close-search" to="/">Close</Link>
-  					<div className="search-books-input-wrapper">
-  						<input
-  							type="text"
-  							placeholder="Search by title or author"
-  							value={this.state.query}
-  							onChange={(e) => this.updateQuery(e.target.value)}
-  						/>
-  					</div>
-  				</div>
-  				<div className="search-books-results">
-  					<ol className="books-grid">
-  					{this.state.showingBooks.length === 0 && this.state.query !== '' && (
-  						<div>No books in our database match your search. Please try a new search term.</div>
-  					)}
-  					{this.state.showingBooks.length === 0 && this.state.query === '' && (
-  						<li></li>
-  					)}
-  					{this.state.showingBooks.map((book) =>
-  					    <li key = {book.id} className={book.id}>
-  					      <div className="book">
-  					        <div className="book-top">
-  					          <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: book.imageLinks && `url(${book.imageLinks.thumbnail})`}}></div>
-  					          <div className="book-shelf-changer">
-  					            <select onChange={this.handleChange} defaultValue={book.shelf || 'none'}>
-  					              <option value="move" disabled>Move to...</option>
-  					              <option value="currentlyReading">Currently Reading</option>
-  					              <option value="wantToRead">Want to Read</option>
-  					              <option value="read">Read</option>
-  					              <option value="none">None</option>
-  					            </select>
-  					          </div>
-  					        </div>
-  					        <div className="book-title">{book.title}</div>
-  					        <div className="book-authors">{book.authors}</div>
-  					      </div>
-  					    </li>
-  					)}
-  					</ol>
-  				</div>
-  			</div>
-
-  		)
-  	}
+  updateBooks(books: any) {
+    const verifiedBooks = books.map(book => {
+      book.shelf = "none";
+      this.props.booksOnShelf.forEach(bookOnShelf => {
+        if (book.id === bookOnShelf.id) {
+          book.shelf = bookOnShelf.shelf;
+        }
+      });
+      return book;
+    });
+    this.setState({
+      books: verifiedBooks
+    });
   }
 
-export default SearchPage
+  fireSearchBook(query: string) {
+    BooksAPI.search(query, 20).then(
+      response => {
+        if (response.error) {
+          this.setState({
+            books: []
+          });
+        } else {
+          this.updateBooks(response);
+        }
+      },
+      error => {
+        console.log("error ocurred");
+      }
+    );
+  }
+
+  updateBookOnSearch(book: any, shelf: string) {
+    let temp = this.state.books;
+    const bookToUpdate = temp.filter(t => t.id === book.id)[0];
+    bookToUpdate.shelf = shelf;
+    this.setState({
+      books: temp
+    });
+    this.props.onChangeShelf(book, shelf);
+  }
+
+  render() {
+    return (
+      <div className="search-books">
+        <div className="search-books-bar">
+          <Link to="/" className="close-search">
+            Close
+          </Link>
+          <div className="search-books-input-wrapper">
+            <input
+              type="text"
+              placeholder="Search by title or author"
+              value={this.state.query}
+              onChange={event => this.updateQuery(event.target.value)}
+            />
+          </div>
+        </div>
+        <div className="search-books-results">
+          <ol className="books-grid">
+            {this.state.books.map(book =>
+              <li key={book.id} className="book">
+                <div className="book-top">
+                  <div
+                    className="book-cover"
+                    style={{
+                      width: 128,
+                      height: 193,
+                      backgroundImage: "url(" + book.imageLinks.thumbnail + ")"
+                    }}
+                  />
+                  <div className="book-shelf-changer">
+                    <select
+                      value={book.shelf}
+                      onChange={e => {
+                        this.updateBookOnSearch(book, e.target.value);
+                      }}
+                    >
+                      <option value="none" disabled>
+                        Move to...
+                      </option>
+                      <option value="currentlyReading">Currently Reading</option>
+                      <option value="wantToRead">Want to Read</option>
+                      <option value="read">Read</option>
+                      <option value="none">None</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="book-title">
+                  {book.title}
+                </div>
+                {book.authors &&
+                  <div className="book-authors">
+                    {book.authors[0]}
+                  </div>}
+              </li>
+            )}
+          </ol>
+        </div>
+      </div>
+    );
+  }
+}
+export default SearchPage;
