@@ -1,10 +1,10 @@
 // @flow
 import React from "react";
 import { Link } from "react-router-dom";
-import { Rx } from 'rxjs/Rx';
-
 import * as BooksAPI from "./BooksAPI";
 import "./App.css";
+import { Subject } from 'rxjs';
+//import { debounceTime} from 'rxjs/operators';
 
 class SearchPage extends React.Component {
   state = {
@@ -12,14 +12,9 @@ class SearchPage extends React.Component {
     books: []
   };
 
-  searchInput: Rx.Subject<any>;
-
   constructor() {
     super();
-    this.searchInput = new Rx.Subject();
-    this.searchInput.debounceTime(500).subscribe(param => {
-      this.fireSearchBook(param);
-    });
+    this.searchInput = new Subject();
   }
 
   updateQuery = (query: string) => {
