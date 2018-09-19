@@ -6,9 +6,14 @@ import './App.css'
 import SearchPage from './SearchPage.js'
 import ListBooks from './ListBooks.js'
 
-class BooksApp extends React.Component {
-  state = {
-    screen: 'search'
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      books: [],
+      screen: 'search'
+    };
   }
 
   componentDidMount() {
@@ -40,4 +45,4 @@ class BooksApp extends React.Component {
   }
 }
 
-export default BooksApp
+export default App;

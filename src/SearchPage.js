@@ -7,12 +7,15 @@ import { Subject } from 'rxjs';
 
 
 class SearchPage extends React.Component {
-  state = {};
-
-
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.searchInput = new Subject();
+
+    this.state = {
+      books: [],
+      screen: 'serach',
+      query: ''
+    }
   }
 
   updateQuery = (query: string) => {

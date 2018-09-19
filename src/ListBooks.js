@@ -7,6 +7,14 @@ import * as BooksAPI from './BooksAPI'
 class ListBooks extends Component {
   state = {};
 
+  constructor() {
+    super();
+    this.defaultState = {
+      booksOnShelf: []
+    };
+    this.state = this.defaultState;
+  }
+
   handleChangeShelf = (bookId : string, e : any) => {
     let temp = this.props.booksOnShelf;
     const book = temp.filter(t => t.id === bookId)[0];
