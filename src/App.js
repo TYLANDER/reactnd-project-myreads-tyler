@@ -8,8 +8,7 @@ import ListBooks from './ListBooks.js'
 
 class BooksApp extends React.Component {
   state = {
-    screen: 'search',
-    books: []
+    screen: 'search'
   }
 
   componentDidMount() {

@@ -4,13 +4,11 @@ import { Link } from "react-router-dom";
 import * as BooksAPI from "./BooksAPI";
 import "./App.css";
 import { Subject } from 'rxjs';
-//import { debounceTime} from 'rxjs/operators';
+
 
 class SearchPage extends React.Component {
-  state = {
-    query: "",
-    books: []
-  };
+  state = {};
+
 
   constructor() {
     super();
