@@ -24,6 +24,7 @@ class SearchPage extends React.Component {
     });
     if (query) {
       this.searchInput.next(query);
+
     } else {
       this.setState({
         books: []
@@ -85,6 +86,7 @@ class SearchPage extends React.Component {
               type="text"
               placeholder="Search by title or author"
               value={this.state.query}
+              book={this.state.books}
               onChange={event => this.updateQuery(event.target.value)}
             />
           </div>
