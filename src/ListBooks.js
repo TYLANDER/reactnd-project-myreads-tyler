@@ -7,8 +7,8 @@ import * as BooksAPI from './BooksAPI'
 class ListBooks extends Component {
   state = {};
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.defaultState = {
       booksOnShelf: []
     };

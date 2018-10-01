@@ -1,14 +1,16 @@
 {
   "dependencies": {
-    "eslint": "^5.6.0",
+    "install-peerdeps": "^1.8.0",
+    "animejs": "^2.2.0",
+    "escape-string-regexp": "^1.0.5",
+    "eslint": "^5.6.1",
+    "imagesloaded": "^4.1.4",
     "prop-types": "^15.6.2",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-router-dom": "^4.3.1",
     "rxjs": "^6.3.2",
     "rxjs-compat": "^6.3.2",
-    "animejs": "^2.2.0",
-    "imagesloaded": "^4.1.4",
     "tippy.js": "^2.5.4"
   },
   "devDependencies": {
