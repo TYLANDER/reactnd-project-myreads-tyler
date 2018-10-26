@@ -37,6 +37,7 @@ class App extends React.Component {
   }
 
   render() {
+    console.log('App Props', this.props)
     return (<div className="app">
       <Route path="/" render={() => (<ListBooks onMoveBook={this.handleChangeShelf} booksOnShelf={this.state.books}/>)}/>
       <Route path="/search" render={() => <SearchPage onChangeShelf={this.handleChangeShelf} booksOnShelf={this.state.books}/>}/>
