@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 import './App.css'
 import BookShelf from './Bookshelf'
 import * as BooksAPI from './BooksAPI'
+import BooksAPI from './BooksAPI'
 import Book from './book'
 
 class ListBooks extends Component {
@@ -17,9 +18,8 @@ class ListBooks extends Component {
   }
 
   handleChangeShelf = () => {
-    const event = e;
     let temp = this.props.booksOnShelf;
-    const book = temp.filter(t => t.id === bookId[0]);
+    const book = temp.filter(t => t.id === bookId)[0];
     book.shelf = e.target.value;
     BooksAPI.update(book, e.target.value).then(response => {
       this.setState({books: temp});
